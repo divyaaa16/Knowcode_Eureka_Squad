@@ -1,13 +1,13 @@
 :root {
-    --nude-light: #e4bfa2;
-    --nude: #efb698;
-    --nude-dark: #e6b497;
-    --green-sage: #78935a;
-    --green-olive: #526533;
+    --nude-light: #F5EDE7;
+    --nude: #E6D5CC;
+    --nude-dark: #D4BFB3;
+    --green-sage: #9CAF88;
+    --green-olive: #718355;
     --green-forest: #3F4A3C;
-    --white: #fde9df;
+    --white: #FFFFFF;
     --shadow: rgba(63, 74, 60, 0.1);
-    --overlay: rgba(60, 75, 56, 0.85);
+    --overlay: rgba(63, 74, 60, 0.85);
 }
 
 * {
@@ -44,7 +44,7 @@ nav.scrolled {
 
 .logo {
     font-size: 1.8rem;
-    font-weight: 850;
+    font-weight: 700;
     color: var(--green-forest);
     letter-spacing: -0.5px;
 }
@@ -89,7 +89,7 @@ nav.scrolled {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    font-weight: 700;
+    font-weight: 500;
     font-size: 0.95rem;
     transition: all 0.3s ease;
 }
@@ -115,7 +115,7 @@ nav.scrolled {
 .sign-up-btn:hover {
     background-color: var(--green-forest);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(86, 105, 56, 0.4);
+    box-shadow: 0 6px 20px rgba(113, 131, 85, 0.4);
 }
 
 /* Hero Section */
@@ -124,7 +124,7 @@ nav.scrolled {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8rem 5% 5rem;
+    padding: 7rem 5% 5rem;
     position: relative;
     overflow: hidden;
     background: linear-gradient(135deg, var(--nude-light) 0%, var(--white) 100%);
@@ -133,7 +133,7 @@ nav.scrolled {
 .hero-content {
     width: 50%;
     z-index: 2;
-    padding-right: 3rem;
+    padding-right: 2rem;
     position: relative;
 }
 
@@ -183,7 +183,6 @@ nav.scrolled {
     position: relative;
     width: 100%;
     height: 100%;
-   
     filter: contrast(1.1) saturate(1.2);
 }
 
@@ -706,7 +705,7 @@ footer {
     border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-/* Modal Styles */
+/* Update Modal Styles */
 .modal {
     display: none;
     position: fixed;
@@ -714,100 +713,192 @@ footer {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.active {
+    opacity: 1;
+    display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .modal-content {
     position: relative;
-    background: linear-gradient(to bottom right, var(--white), var(--nude-light));
+    background: linear-gradient(145deg, #ffffff, #f3f3f3);
     padding: 2.5rem;
     width: 90%;
     max-width: 400px;
-    border-radius: 15px;
+    border-radius: 20px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    transform: translateY(-20px);
+    transform: translateY(-50px);
     opacity: 0;
-    animation: modalSlideIn 0.3s ease forwards;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@keyframes modalSlideIn {
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-.modal h2 {
-    color: var(--green-forest);
-    font-size: 1.8rem;
-    margin-bottom: 1.5rem;
-    text-align: center;
+.modal.active .modal-content {
+    transform: translateY(0);
+    opacity: 1;
 }
 
 .close {
     position: absolute;
     right: 1.5rem;
     top: 1.5rem;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    color: var(--green-forest);
     cursor: pointer;
-    color: var(--green-olive);
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
 }
 
 .close:hover {
-    color: var(--green-forest);
     transform: rotate(90deg);
+    color: #ff4444;
+}
+
+.modal h2 {
+    color: var(--green-forest);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 600;
 }
 
 .form-group {
     margin-bottom: 1.5rem;
+    position: relative;
 }
 
 .form-group input {
     width: 100%;
-    padding: 1rem;
-    border: 2px solid transparent;
+    padding: 1rem 1.2rem;
+    border: 2px solid #e0e0e0;
     border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.9);
     font-size: 1rem;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    background: white;
 }
 
 .form-group input:focus {
     border-color: var(--green-olive);
-    box-shadow: 0 2px 15px rgba(113, 131, 85, 0.2);
+    box-shadow: 0 0 0 3px rgba(113, 131, 85, 0.2);
     outline: none;
 }
 
 .submit-btn {
     width: 100%;
     padding: 1rem;
-    background-color: var(--green-olive);
+    background: linear-gradient(145deg, var(--green-olive), var(--green-forest));
     color: white;
     border: none;
     border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
-    font-weight: 500;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(113, 131, 85, 0.3);
-    position: relative;
-    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .submit-btn:hover {
-    background-color: var(--green-forest);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(113, 131, 85, 0.4);
+    box-shadow: 0 5px 15px rgba(113, 131, 85, 0.4);
 }
 
+.social-login {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.social-login p {
+    color: #666;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.social-login p::before,
+.social-login p::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.social-login p::before {
+    left: 0;
+}
+
+.social-login p::after {
+    right: 0;
+}
+
+.social-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.social-buttons button {
+    flex: 1;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.google-btn {
+    background-color: white;
+    color: #444;
+    border: 2px solid #ddd !important;
+}
+
+.facebook-btn {
+    background-color: #4267B2;
+    color: white;
+}
+
+.google-btn:hover {
+    background-color: #f1f1f1;
+    transform: translateY(-2px);
+}
+
+.facebook-btn:hover {
+    background-color: #365899;
+    transform: translateY(-2px);
+}
+
+.switch-form {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: #666;
+}
+
+.switch-form a {
+    color: var(--green-olive);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.switch-form a:hover {
+    color: var(--green-forest);
+    text-decoration: underline;
+}
+
+/* Add loading animation for buttons */
 .submit-btn.loading {
-    pointer-events: none;
-    opacity: 0.8;
+    position: relative;
+    color: transparent;
 }
 
 .submit-btn.loading::after {
@@ -824,66 +915,28 @@ footer {
     animation: spin 1s ease-in-out infinite;
 }
 
-.social-login {
-    margin-top: 2rem;
-    text-align: center;
-}
-
-.social-login p {
-    color: var(--green-forest);
-    margin-bottom: 1rem;
-}
-
-.social-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-}
-
-.google-btn {
-    padding: 0.8rem 1.5rem;
-    background-color: white;
-    border: 2px solid var(--green-olive);
-    border-radius: 8px;
-    color: var(--green-forest);
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.google-btn:hover {
-    background-color: var(--green-olive);
-    color: white;
-    transform: translateY(-2px);
-}
-
-.google-btn i {
-    font-size: 1.2rem;
-}
-
-.switch-form {
-    margin-top: 1.5rem;
-    text-align: center;
-    color: var(--green-forest);
-}
-
-.switch-form a {
-    color: var(--green-olive);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.switch-form a:hover {
-    color: var(--green-forest);
-    text-decoration: underline;
-}
-
 @keyframes spin {
     to { transform: rotate(360deg); }
+}
+
+/* Add image hover effects */
+.float-img:hover {
+    transform: scale(1.02) translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    z-index: 2;
+}
+
+/* Remove all the 3D body viewer related CSS */
+.viewer-container,
+.viewer-header,
+.gender-selector,
+.gender-btn,
+.model-controls,
+.control-btn,
+#model-viewer,
+.loading-container,
+.loading-spinner {
+    display: none;
 }
 
 /* Aesthetics Carousel */
@@ -1120,62 +1173,4 @@ footer {
 .input-container button:hover {
     background: var(--green-forest);
     transform: scale(1.1);
-}
-
-/* Remove these styles */
-.profile-btn,
-.profile-text,
-.profile-dropdown,
-.profile-menu,
-.profile-avatar,
-.profile-info {
-    display: none;
-}
-
-/* Add these to your existing chatbot styles */
-.typing-dots {
-    display: flex;
-    gap: 4px;
-    padding: 4px 8px;
-}
-
-.typing-dots span {
-    width: 8px;
-    height: 8px;
-    background: var(--green-olive);
-    border-radius: 50%;
-    animation: typing 1s infinite ease-in-out;
-}
-
-.typing-dots span:nth-child(1) { animation-delay: 0.1s; }
-.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-.typing-dots span:nth-child(3) { animation-delay: 0.3s; }
-
-@keyframes typing {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-.bot-message.typing {
-    background: rgba(255, 255, 255, 0.7);
-    padding: 0.5rem;
-}
-
-.chat-box {
-    scroll-behavior: smooth;
-}
-
-.user-message, .bot-message {
-    animation: messageSlide 0.3s ease-out;
-}
-
-@keyframes messageSlide {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 } 
