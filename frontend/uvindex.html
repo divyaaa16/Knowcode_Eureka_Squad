@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UV Index Checker</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(rgba(245, 240, 235, 0.97), rgba(235, 240, 235, 0.97)),
+                        url('https://images.unsplash.com/photo-1532178910-7815d6919875?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #2c4a3c;
+        }
+        h1 {
+            text-align: center;
+            color: #2c4a3c;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(44, 74, 60, 0.2);
+            position: relative;
+            padding-bottom: 15px;
+        }
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #7ca37f, transparent);
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            gap: 1rem;
+            background: rgba(245, 240, 235, 0.9);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid #7ca37f;
+            box-shadow: 0 0 20px rgba(124, 163, 127, 0.3);
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            margin: 20px auto;
+            animation: formFloat 3s infinite ease-in-out;
+        }
+        @keyframes formFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        input {
+            padding: 15px 20px;
+            margin: 5px;
+            border: 3px solid #7ca37f;
+            border-radius: 5px;
+            width: 300px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            background: rgba(250, 245, 240, 0.9);
+            color: #333;
+        }
+        input:focus {
+            outline: none;
+            border-color: #96b498;
+            box-shadow: 0 0 15px rgba(124, 163, 127, 0.4);
+        }
+        button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #7ca37f, #96b498);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(124, 163, 127, 0.3);
+            animation: buttonPulse 2s infinite;
+        }
+        @keyframes buttonPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        button:hover {
+            animation: none;
+            transform: translateY(-3px);
+            box-shadow: 0 4px 20px rgba(124, 163, 127, 0.6);
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+            background: rgba(245, 240, 235, 0.9);
+            border: 2px solid #7ca37f;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            color: #2c4a3c;
+            animation: resultAppear 0.5s ease-out;
+        }
+        @keyframes resultAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .uv-index {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .risk-level {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            border: 2px solid currentColor;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .precautions {
+            margin-top: 1.5rem;
+            text-align: left;
+            padding: 1rem;
+            background: rgba(250, 245, 240, 0.7);
+            border-radius: 8px;
+            border: 1px solid rgba(124, 163, 127, 0.3);
+        }
+        .precautions h2 {
+            color: #2c4a3c;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(44, 74, 60, 0.2);
+        }
+        .precautions ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .precautions li {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: #2c4a3c;
+            animation: listAppear 0.5s ease-out backwards;
+        }
+        @keyframes listAppear {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .precautions li:before {
+            content: "•";
+            color: #4CAF50;
+            position: absolute;
+            left: 0;
+        }
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .floating-sun {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at center, rgba(124, 163, 127, 0.4), transparent);
+            border-radius: 50%;
+            animation: sunFloat 6s infinite ease-in-out;
+        }
+        @keyframes sunFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        .green { color: #7ca37f; }
+        .yellow { color: #c1a878; }
+        .orange { color: #c1956a; }
+        .red { color: #c17a6a; }
+        .purple { color: #9c7a9c; }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-sun" style="top: 10%; left: 10%;"></div>
+        <div class="floating-sun" style="top: 70%; left: 80%;"></div>
+        <div class="floating-sun" style="top: 40%; left: 60%;"></div>
+    </div>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <h1>UV Index Checker</h1>
+    <form id="uvForm">
+        <input type="text" id="location" placeholder="Enter City Name (e.g., London, UK)" required>
+        <button type="submit">Check UV Index</button>
+    </form>
+
+    <div id="result" class="result" style="display: none;"></div>
+
+    <script>
+        const API_KEY = "ea6eb7e68014be16e6c3ae06af044bc6";
+        const form = document.getElementById("uvForm");
+        const resultDiv = document.getElementById("result");
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const location = document.getElementById("location").value;
+
+            try {
+                resultDiv.innerHTML = '<p>Loading...</p>';
+                resultDiv.style.display = "block";
+
+                // Get coordinates
+                const geoResponse = await fetch(
+                    `https://api.openweathermap.org/geo/1.0/direct?q=${location}&appid=${API_KEY}`
+                );
+                const geoData = await geoResponse.json();
+
+                if (geoData.length === 0) {
+                    throw new Error('Location not found. Please check the city name.');
+                }
+
+                const { lat, lon } = geoData[0];
+
+                // Get weather data including UV index
+                const weatherResponse = await fetch(
+                    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+                );
+                const weatherData = await weatherResponse.json();
+
+                // Get UV index from Air Pollution API
+                const uvResponse = await fetch(
+                    `https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${API_KEY}`
+                );
+                const uvData = await uvResponse.json();
+                
+                // Calculate UV index from Air Quality Index (AQI)
+                const aqi = uvData.list[0].main.aqi;
+                // Convert AQI to approximate UV index (1-5 scale to 0-11+ scale)
+                const uvIndex = Math.min(Math.round((aqi * 2.2)), 11);
+
+                let category, color, precautions;
+
+                if (uvIndex <= 2) {
+                    category = "Low";
+                    color = "green";
+                    precautions = [
+                        "No protection required for most people",
+                        "Safe to stay outside",
+                        "Wear sunglasses on bright days",
+                        "If you burn easily, cover up and use broad spectrum SPF 30+ sunscreen"
+                    ];
+                } else if (uvIndex <= 5) {
+                    category = "Moderate";
+                    color = "yellow";
+                    precautions = [
+                        "Stay in shade near midday",
+                        "Wear protective clothing",
+                        "Apply broad spectrum SPF 30+ sunscreen every 2 hours",
+                        "Cover your eyes with UV-blocking sunglasses"
+                    ];
+                } else if (uvIndex <= 7) {
+                    category = "High";
+                    color = "orange";
+                    precautions = [
+                        "Reduce time in the sun between 10 a.m. and 4 p.m.",
+                        "Cover your body with sun protective clothing",
+                        "Apply broad spectrum SPF 30+ sunscreen every 2 hours",
+                        "Seek shade during midday hours"
+                    ];
+                } else if (uvIndex <= 10) {
+                    category = "Very High";
+                    color = "red";
+                    precautions = [
+                        "Minimize sun exposure between 10 a.m. and 4 p.m.",
+                        "Apply broad spectrum SPF 50+ sunscreen every 2 hours",
+                        "Wear protective clothing and UV-blocking sunglasses",
+                        "Seek shade - UV radiation can be intense"
+                    ];
+                } else {
+                    category = "Extreme";
+                    color = "purple";
+                    precautions = [
+                        "Avoid sun exposure between 10 a.m. and 4 p.m.",
+                        "Apply broad spectrum SPF 50+ sunscreen every 2 hours",
+                        "Wear full protective clothing and UV-blocking sunglasses",
+                        "Stay indoors or seek complete shade"
+                    ];
+                }
+
+                resultDiv.innerHTML = `
+                    <h2>${geoData[0].name}, ${geoData[0].country}</h2>
+                    <div class="uv-index ${color}">${uvIndex.toFixed(1)}</div>
+                    <div class="risk-level ${color}">Risk Level: ${category}</div>
+                    <div class="precautions">
+                        <h2>Recommended Precautions:</h2>
+                        <ul>
+                            ${precautions.map(p => `<li>${p}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <p style="margin-top: 1rem; color: #666;">
+                        Temperature: ${Math.round(weatherData.main.temp)}°C<br>
+                        Weather: ${weatherData.weather[0].main}
+                    </p>
+                `;
+            } catch (error) {
+                console.error('API Error:', error);
+                resultDiv.innerHTML = `
+                    <p style="color: #e74c3c;">
+                        ${error.message || 'An error occurred. Please try again.'}
+                    </p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

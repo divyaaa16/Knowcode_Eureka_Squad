@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Find Nearby Ayurvedic Centers</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+    }
+    #map {
+      width: 100%;
+      height: 100vh;
+    }
+    .search-container {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 10;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      max-width: 300px;
+    }
+    .search-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #2c4a3c;
+      margin-bottom: 5px;
+    }
+    input[type="text"] {
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 250px;
+    }
+    button {
+      padding: 5px 10px;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+  <!-- TomTom Maps SDK -->
+  <link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.21.3/maps/maps.css">
+  <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.21.3/maps/maps-web.min.js"></script>
+  <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.21.3/services/services-web.min.js"></script>
+</head>
+<body>
+
+  <div class="search-container">
+    <div class="search-title">Find Nearby Ayurvedic Centers</div>
+    <input type="text" id="search-input" placeholder="Enter your location">
+    <button onclick="searchAyurvedicCenters()">Find Ayurvedic Centers</button>
+  </div>
+
+  <div id="map"></div>
+
+  <script>
+    const API_KEY = 'kV0N0Ge4zTyoG9ucxWZlExiOLNrwAu6h'; // Replace with your TomTom API key
+    const map = tt.map({
+      key: API_KEY,
+      container: 'map',
+      center: [78.9629, 20.5937], // Default center for India
+      zoom: 5
+    });
+
+    let searchMarker = null; // To hold the search result marker
+    let markers = []; // To hold Ayurvedic center markers
+    let routeLayer = null; // To hold the route layer
+    let userLocation = null; // To store user search location
+
+    const ayurvedicCenters = [
+      {
+        name: 'Dr Dhayals Skin Clinic by Dr Mamta Dhayal',
+        address: 'Shop no 13, Sheetal F Building, VN Purav Marg, near Santrupti Hospital, Samarth Nagar, Chunabhatti, Sion, Mumbai, Maharashtra 400022',
+        coordinates: [72.8352, 19.0192]
+      },
+      {
+        name: 'Dr. Priyanka S. Jain',
+        address: 'Flat no.7, 1st Floor, Prem Kunj Society, Sion Cir, Sion West, Sion, Mumbai, Maharashtra 400022',
+        coordinates: [72.9072, 19.1197]
+      },
+      {
+        name: 'Dr Rahul Siraskar - Dermatologist, Hair & Skin Specialist',
+        address: 'Kandivali West, Mumbai',
+        coordinates: [72.8587, 19.2184]
+      }
+    ];
+
+    function searchAyurvedicCenters() {
+      const query = document.getElementById('search-input').value;
+      if (!query) return;
+
+      if (searchMarker) {
+        searchMarker.remove();
+      }
+
+      tt.services.fuzzySearch({
+        key: API_KEY,
+        query: query
+      }).then(result => {
+        if (result.results && result.results.length > 0) {
+          userLocation = result.results[0].position;
+
+          map.setCenter(userLocation);
+          searchMarker = new tt.Marker({ color: 'red' })
+            .setLngLat(userLocation)
+            .addTo(map);
+
+          showAyurvedicCenters();
+        } else {
+          alert('Location not found!');
+        }
+      });
+    }
+
+    function showAyurvedicCenters() {
+      markers.forEach(marker => marker.remove());
+      markers = [];
+
+      ayurvedicCenters.forEach(center => {
+        const marker = new tt.Marker({ color: 'green' })
+          .setLngLat(center.coordinates)
+          .setPopup(new tt.Popup().setHTML(`
+            <b>${center.name}</b><br>${center.address}<br>
+            <button onclick="getRoute([${center.coordinates}])">Get Directions</button>
+          `))
+          .addTo(map);
+        markers.push(marker);
+      });
+    }
+
+    function getRoute(destination) {
+      if (!userLocation) {
+        alert('Please search for your location first!');
+        return;
+      }
+
+      if (routeLayer) {
+        map.removeLayer(routeLayer);
+        map.removeSource(routeLayer);
+      }
+
+      tt.services.calculateRoute({
+        key: API_KEY,
+        locations: [userLocation, destination]
+      }).then(response => {
+        const geojson = response.toGeoJson();
+
+        routeLayer = 'route-layer';
+        map.addLayer({
+          id: routeLayer,
+          type: 'line',
+          source: {
+            type: 'geojson',
+            data: geojson
+          },
+          paint: {
+            'line-color': '#4CAF50',
+            'line-width': 5
+          }
+        });
+
+        const bounds = new tt.LngLatBounds();
+        geojson.features[0].geometry.coordinates.forEach(coord => bounds.extend(coord));
+        map.fitBounds(bounds, { padding: 20 });
+      });
+    }
+  </script>
+</body>
+</html>

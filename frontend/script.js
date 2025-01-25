@@ -204,7 +204,6 @@ async function sendMessage() {
 
 // Add your API key as a constant
 const API_KEY = "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";
-
 // Social login handling
 document.querySelectorAll('.google-btn').forEach(btn => {
     btn.addEventListener('click', () => {
